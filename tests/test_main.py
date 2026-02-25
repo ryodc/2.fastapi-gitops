@@ -50,7 +50,7 @@ def test_create_item():
         "/api/items",
         params={"name": "Test Item", "description": "This is a test item"}
     )
-    # Check request 
+    # Check request
     assert response.status_code == 200
     # Get the response data
     data = response.json()
@@ -58,4 +58,4 @@ def test_create_item():
     assert data["id"] == 999
     assert data["name"] == "Test Item"
     assert data["description"] == "This is a test item"
-    assert data["created"] == True
+    assert data["created"]
