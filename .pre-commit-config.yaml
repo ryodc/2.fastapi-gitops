@@ -1,5 +1,47 @@
 repos:
+  # Basic checks - these catch common mistakes
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
+      # Removes extra spaces at the end of lines
       - id: trailing-whitespace
+      
+      # Stops you from committing files bigger than 500KB
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      
+      # Checks if YAML files have correct syntax
+      # Skips Helm chart files because they have special template syntax
+      - id: check-yaml
+        exclude: ^helm/
+        args: ['--unsafe']
+  
+  # Sorts your Python imports alphabetically so they look neat
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ['--profile', 'black']
+  
+  # Formats your Python code to look clean and consistent
+  - repo: https://github.com/psf/black
+    rev: 24.2.0
+    hooks:
+      - id: black
+        language_version: python3
+  
+  # Checks your Python code for security problems
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.7
+    hooks:
+      - id: bandit
+        args: ['-c', 'pyproject.toml']
+        additional_dependencies: ['bandit[toml]']
+  
+  # Makes sure you don't accidentally commit passwords or API keys
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package.lock.json
